@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Storage<T>
+{
+    private List<T> items = new List<T>();
+
+    public void AddItem(T item)
+    {
+        items.Add(item);
+    }
+
+    public void RemoveItem(T item)
+    {
+        items.Remove(item);
+    }
+
+    public void DisplayItems()
+    {
+        foreach (var item in items)
+        {
+            Console.WriteLine(item);
+        }
+    }
+}
+
+delegate double MathOperation(double a, double b);
+
+class ThresholdChecker
+{
+    public event Action OnThresholdReached;
+    private int threshold;
+
+    public ThresholdChecker(int threshold)
+    {
+        this.threshold = threshold;
+    }
+
+    public void CheckValue(int value)
+    {
+        if (value > threshold)
+        {
+            OnThresholdReached?.Invoke();
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.InputEncoding = System.Text.Encoding.UTF8;
+
+        Storage<int> intStorage = new Storage<int>();
+        intStorage.AddItem(10);
+        intStorage.AddItem(20);
+        intStorage.DisplayItems();
+        
+        MathOperation add = (a, b) => a + b;
+        MathOperation subtract = (a, b) => a - b;
+        Console.WriteLine($"Addition: {add(5, 3)}");
+        Console.WriteLine($"Subtraction: {subtract(5, 3)}");
+
+        ThresholdChecker checker = new ThresholdChecker(10);
+        checker.OnThresholdReached += () => Console.WriteLine("The threshold value has been exceeded!");
+        checker.CheckValue(15);
+
+        List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        var evenNumbers = numbers.Where(n => n % 2 == 0);
+        Console.WriteLine("Even numbers:");
+        foreach (var num in evenNumbers)
+        {
+            Console.WriteLine(num);
+        }
+    }
+}
